@@ -1,17 +1,32 @@
+import { newGame } from "..";
+
 function shipFactory(length) {
   let hits = 0;
   let sunk = false;
 
-  const hit = function () {
-    this.hits++;
-    _isSunk.call(this);
-  };
+  function hit() {
+    hits++;
+    _isSunk();
+    if (getSunk()) newGame.isAllSunk();
+  }
 
-  const _isSunk = function () {
-    if (this.length === this.hits) this.sunk = true;
-  };
+  function _isSunk() {
+    if (getLength() === getHits()) sunk = true;
+  }
 
-  return { length, hits, sunk, hit };
+  function getHits() {
+    return hits;
+  }
+
+  function getLength() {
+    return length;
+  }
+
+  function getSunk() {
+    return sunk;
+  }
+
+  return { getLength, getHits, getSunk, hit };
 }
 
 export { shipFactory };

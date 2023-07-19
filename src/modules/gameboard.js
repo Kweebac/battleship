@@ -1,41 +1,67 @@
 import { shipFactory } from "./ship";
 
-const gameboardFactory = function () {
+function gameboardFactory() {
   let gameboard = [];
   for (let i = 0; i < 10; i++) {
-    gameboard.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    gameboard.push([
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+    ]);
   }
 
-  const place = function (length, start, facing) {
-    const newShip = shipFactory(length);
-    newShip.hit();
+  function getGameboard() {
+    return gameboard;
+  }
 
-    this.gameboard[start[0]][start[1]] = newShip;
+  function place(length, start, facing) {
+    const newShip = shipFactory(length);
 
     if (facing === "north") {
-      for (let i = 1; i < length; i++) {
-        if (this.gameboard[start[0]][start[1] + i]) throw new Error("Overlap");
-        this.gameboard[start[0]][start[1] + i] = newShip;
+      for (let i = 0; i < length; i++) {
+        if (typeof this.getGameboard()[start[0]][start[1] + i] === "object")
+          throw new Error("Overlap");
+        this.getGameboard()[start[0]][start[1] + i] = newShip;
       }
     } else if (facing === "east") {
-      for (let i = 1; i < length; i++) {
-        if (this.gameboard[start[0] + i][start[1]]) throw new Error("Overlap");
-        this.gameboard[start[0] + i][start[1]] = newShip;
+      for (let i = 0; i < length; i++) {
+        if (typeof this.getGameboard()[start[0] + i][start[1]] === "object")
+          throw new Error("Overlap");
+        this.getGameboard()[start[0] + i][start[1]] = newShip;
       }
     } else if (facing === "south") {
-      for (let i = 1; i < length; i++) {
-        if (this.gameboard[start[0]][start[1] - i]) throw new Error("Overlap");
-        this.gameboard[start[0]][start[1] - i] = newShip;
+      for (let i = 0; i < length; i++) {
+        if (typeof this.getGameboard()[start[0]][start[1] - i] === "object")
+          throw new Error("Overlap");
+        this.getGameboard()[start[0]][start[1] - i] = newShip;
       }
     } else if (facing === "west") {
-      for (let i = 1; i < length; i++) {
-        if (this.gameboard[start[0] - i][start[1]]) throw new Error("Overlap");
-        this.gameboard[start[0] - i][start[1]] = newShip;
+      for (let i = 0; i < length; i++) {
+        if (typeof this.getGameboard()[start[0] - i][start[1]] === "object")
+          throw new Error("Overlap");
+        this.getGameboard()[start[0] - i][start[1]] = newShip;
       }
     } else throw new Error("Invalid direction; must be north, east, south or west");
-  };
+  }
 
-  return { gameboard, place };
-};
+  function receiveAttack(coords) {
+    if (typeof this.getGameboard()[coords[0]][coords[1]] === "object") {
+      this.getGameboard()[coords[0]][coords[1]].hit();
+    } else gameboard[coords[0]][coords[1]] = -1;
+  }
+
+  function isAllSunk() {
+    return 2;
+  }
+
+  return { getGameboard, place, receiveAttack, isAllSunk };
+}
 
 export { gameboardFactory };
