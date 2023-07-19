@@ -1,10 +1,13 @@
 import "./normalize.css";
 import "./style.css";
-import { shipFactory } from "./modules/ship";
-import { gameboardFactory } from "./modules/gameboard";
+import { Player } from "./modules/player";
 
-const newGame = gameboardFactory();
-newGame.place(2, [0, 0], "east");
-newGame.getGameboard()[0][0].hit();
+const player1 = Player("Kweebac");
 
-export { newGame };
+player1.board.place(1, [0, 0], false);
+
+player1.board.getGameboard()[0][0].hit();
+if (player1.board.getGameboard()[0][0].getSunk()) console.log(player1.board.hasAllSunk());
+
+const computer = Player("A1yssa");
+computer.board.place(4, [0, 0], true);

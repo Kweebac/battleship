@@ -1,17 +1,14 @@
-import { newGame } from "..";
-
-function shipFactory(length) {
+function Ship(length) {
   let hits = 0;
   let sunk = false;
 
   function hit() {
     hits++;
-    _isSunk();
-    if (getSunk()) newGame.isAllSunk();
+    hasSunk();
   }
 
-  function _isSunk() {
-    if (getLength() === getHits()) sunk = true;
+  function hasSunk() {
+    if (length === hits) sunk = true;
   }
 
   function getHits() {
@@ -26,7 +23,7 @@ function shipFactory(length) {
     return sunk;
   }
 
-  return { getLength, getHits, getSunk, hit };
+  return { hit, hasSunk, getLength, getHits, getSunk };
 }
 
-export { shipFactory };
+export { Ship };
