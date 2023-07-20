@@ -1,4 +1,6 @@
 const DOM = {
+  playerTurn: true,
+
   createBoard: (board) => {
     for (let i = 1; i < 11; i++) {
       for (let j = 0; j < 10; j++) {
@@ -35,12 +37,24 @@ const DOM = {
     const playerBoard = document.querySelector(".playerBoard");
     const computerBoard = document.querySelector(".computerBoard");
 
-    if (playerBoard.id === "disabled") {
+    if (!DOM.playerTurn) {
+      DOM.playerTurn = true;
       computerBoard.id = "disabled";
       playerBoard.id = "";
-    } else if (computerBoard.id === "disabled") {
+    } else if (DOM.playerTurn) {
+      DOM.playerTurn = false;
       playerBoard.id = "disabled";
       computerBoard.id = "";
+    }
+  },
+
+  eventListeners: () => {
+    const squares = document.querySelectorAll(".playableSquare");
+    for (const square of squares) {
+      square.onclick = (event) => {
+        if (event.currentTarget.parentElement.parentElement.id === "disabled") return;
+        DOM.changeTurn();
+      };
     }
   },
 };
