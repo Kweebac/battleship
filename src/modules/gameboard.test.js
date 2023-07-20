@@ -25,7 +25,10 @@ describe("Place ships at coordinates", () => {
     );
   });
   it("Doesn't go off the map", () => {
-    expect(() => player1.place(5, [6, 2], false)).toThrow(Error);
+    expect(() => player1.place(2, [9, 0], false)).toThrow(Error);
+    expect(() => player1.place(2, [5, 9], true)).toThrow(Error);
+    expect(() => player1.place(2, [-2, 1], true)).toThrow(Error);
+    expect(() => player1.place(2, [13, 13], true)).toThrow(Error);
   });
 
   it("Ships don't overlap", () => {

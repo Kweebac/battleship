@@ -25,9 +25,31 @@ body {
   place-items: center;
 }
 .board .playableSquare {
-  border: 1px solid rgb(172, 172, 239);
+  border: 1px solid rgb(0, 208, 255);
+  cursor: pointer;
 }
 .board .playableSquare svg {
   width: 2.5rem;
   height: 2.5rem;
+}
+.board .playableSquare svg[data-name="boat"] {
+  color: rgb(0, 208, 255);
+}
+.board .playableSquare svg[data-name="sunk"] {
+  color: rgb(255, 97, 97);
+}
+.board .playableSquare svg[data-name="miss"] {
+  width: 2rem;
+  height: 2rem;
+}
+
+.board#disabled .square {
+  color: lightgray;
+}
+.board#disabled .playableSquare {
+  border: 1px solid lightgray;
+  cursor: default;
+}
+.board#disabled svg {
+  color: lightgray;
 }

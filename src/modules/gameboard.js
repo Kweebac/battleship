@@ -30,11 +30,15 @@ function Gameboard() {
     if (vertical === true) {
       for (let i = 0; i < length; i++) {
         if (typeof gameboard[start[0]][start[1] + i] === "object") throw new Error("Overlap");
+        if (start[0] > 9 || start[0] < 0 || start[1] + i > 9 || start[1] + i < 0)
+          throw new Error("Out of bounds");
         gameboard[start[0]][start[1] + i] = newShip;
       }
     } else if (vertical === false) {
       for (let i = 0; i < length; i++) {
         if (typeof gameboard[start[0] + i][start[1]] === "object") throw new Error("Overlap");
+        if (start[0] + i > 9 || start[0] + i < 0 || start[1] > 9 || start[1] < 0)
+          throw new Error("Out of bounds");
         gameboard[start[0] + i][start[1]] = newShip;
       }
     } else throw new Error("Invalid direction, vertical must be true or false");
