@@ -1,13 +1,23 @@
 import "./normalize.css";
 import "./style.css";
 import { Player } from "./modules/player";
+import { DOM } from "./modules/DOM";
 
-const player1 = Player("Kweebac");
+const playerBoard = document.querySelector(".playerBoard");
+const computerBoard = document.querySelector(".computerBoard");
 
-player1.board.place(1, [0, 0], false);
+DOM.createBoard(playerBoard);
+DOM.createBoard(computerBoard);
 
-player1.board.getGameboard()[0][0].hit();
-if (player1.board.getGameboard()[0][0].getSunk()) console.log(player1.board.hasAllSunk());
+const player = Player("Kweebac");
+player.board.place(3, [0, 0], false);
+player.board.place(5, [3, 4], true);
+player.board.place(2, [6, 4], true);
+DOM.populateBoard(playerBoard, player);
 
-const computer = Player("A1yssa");
-computer.board.place(4, [0, 0], true);
+const computer = Player("Computer");
+computer.board.place(3, [1, 0], false);
+computer.board.place(2, [5, 9], true); // should give error
+DOM.populateBoard(computerBoard, computer);
+
+// DOM.populateBoard(computerBoard);
