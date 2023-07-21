@@ -45,10 +45,14 @@ function Gameboard() {
   }
 
   function receiveAttack(coords) {
-    if (typeof gameboard[coords[0]][coords[1]] === "object") {
+    if (gameboard[coords[0]][coords[1]] === true || gameboard[coords[0]][coords[1]] === false)
+      throw new Error("Can't hit the same square twice");
+    else if (typeof gameboard[coords[0]][coords[1]] === "object") {
       gameboard[coords[0]][coords[1]].hit();
       gameboard[coords[0]][coords[1]] = true;
-    } else gameboard[coords[0]][coords[1]] = false;
+      if (hasAllSunk()) return "Win";
+    } else if (gameboard[coords[0]][coords[1]] === undefined)
+      gameboard[coords[0]][coords[1]] = false;
   }
 
   function hasAllSunk() {

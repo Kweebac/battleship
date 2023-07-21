@@ -1,5 +1,7 @@
+import { computer, player } from "..";
+
 const DOM = {
-  playerTurn: true,
+  computerTurn: true,
 
   createBoard: (board) => {
     for (let i = 1; i < 11; i++) {
@@ -37,15 +39,41 @@ const DOM = {
     const playerBoard = document.querySelector(".playerBoard");
     const computerBoard = document.querySelector(".computerBoard");
 
-    if (!DOM.playerTurn) {
-      DOM.playerTurn = true;
+    if (!DOM.computerTurn) {
       computerBoard.id = "disabled";
       playerBoard.id = "";
-    } else if (DOM.playerTurn) {
-      DOM.playerTurn = false;
+      DOM.computerTurn = true;
+    } else if (DOM.computerTurn) {
       playerBoard.id = "disabled";
       computerBoard.id = "";
+      DOM.computerTurn = false;
     }
+  },
+
+  getSquareCoords: (event) => {
+    let squareCoords = [];
+
+    // gets square coordinates
+    for (let i = 0; i < event.currentTarget.parentElement.parentElement.children.length; i++) {
+      if (
+        event.currentTarget.parentElement ===
+        event.currentTarget.parentElement.parentElement.children[i]
+      )
+        squareCoords.push(i - 1);
+    }
+    for (let i = 0; i < event.currentTarget.parentElement.children.length; i++) {
+      if (event.currentTarget === event.currentTarget.parentElement.children[i])
+        squareCoords.push(i - 1);
+    }
+
+    return squareCoords;
+  },
+
+  attack: (event) => {
+    const squareCoords = DOM.getSquareCoords(event);
+    const opponent = DOM.computerTurn ? player : computer;
+
+    if (opponent.board.receiveAttack(squareCoords) === "Win") console.log(`Winner!`);
   },
 
   eventListeners: () => {
@@ -53,6 +81,22 @@ const DOM = {
     for (const square of squares) {
       square.onclick = (event) => {
         if (event.currentTarget.parentElement.parentElement.id === "disabled") return;
+
+        try {
+          DOM.attack(event);
+        } catch (error) {
+          return;
+        }
+
+        const playerBoard = document.querySelector(".playerBoard");
+        const computerBoard = document.querySelector(".computerBoard");
+
+        if (DOM.computerTurn) {
+          DOM.populateBoard(playerBoard, player);
+        } else {
+          DOM.populateBoard(computerBoard, computer);
+        }
+
         DOM.changeTurn();
       };
     }
