@@ -53,3 +53,27 @@ body {
 .board#disabled svg {
   color: lightgray;
 }
+
+.winner-container {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+
+  display: grid;
+  place-content: center;
+
+  visibility: hidden;
+}
+.winner {
+  background-color: gray;
+  color: white;
+  height: 10rem;
+  width: 30rem;
+  border-radius: 12px;
+  border: 4px solid lightgray;
+  font-size: 3rem;
+  font-weight: bold;
+
+  display: grid;
+  place-content: center;
+}
