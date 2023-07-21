@@ -20,5 +20,3 @@ computer.board.place(1, [5, 8], true);
 DOM.populateBoard(computerBoard, computer);
 
 export { player, computer };
-
-// make computer automatically choose a random spot
