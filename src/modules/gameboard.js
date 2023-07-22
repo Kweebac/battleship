@@ -1,3 +1,4 @@
+import { computer } from "..";
 import { Ship } from "./ship";
 
 function Gameboard() {
@@ -25,23 +26,49 @@ function Gameboard() {
 
   function place(length, start, vertical) {
     const newShip = Ship(length);
-    ships.push(newShip);
 
     if (vertical === true) {
+      // check for errors first
       for (let i = 0; i < length; i++) {
         if (typeof gameboard[start[0]][start[1] + i] === "object") throw new Error("Overlap");
         if (start[0] > 9 || start[0] < 0 || start[1] + i > 9 || start[1] + i < 0)
           throw new Error("Out of bounds");
+      }
+
+      for (let i = 0; i < length; i++) {
         gameboard[start[0]][start[1] + i] = newShip;
       }
     } else if (vertical === false) {
+      // check for errors first
       for (let i = 0; i < length; i++) {
         if (typeof gameboard[start[0] + i][start[1]] === "object") throw new Error("Overlap");
         if (start[0] + i > 9 || start[0] + i < 0 || start[1] > 9 || start[1] < 0)
           throw new Error("Out of bounds");
+      }
+
+      for (let i = 0; i < length; i++) {
         gameboard[start[0] + i][start[1]] = newShip;
       }
     } else throw new Error("Invalid direction, vertical must be true or false");
+
+    ships.push(newShip);
+  }
+
+  function computerPlace(length) {
+    while (true) {
+      let coords = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
+
+      let vertical;
+      if (Math.ceil(Math.random() * 2) === 1) vertical = true;
+      else vertical = false;
+
+      try {
+        computer.board.place(length, coords, vertical);
+        break;
+      } catch (error) {
+        continue;
+      }
+    }
   }
 
   function receiveAttack(coords) {
@@ -72,7 +99,7 @@ function Gameboard() {
     return [randNum1, randNum2];
   }
 
-  return { getGameboard, place, receiveAttack, hasAllSunk, randomSquare };
+  return { getGameboard, place, computerPlace, receiveAttack, hasAllSunk, randomSquare };
 }
 
 export { Gameboard };
