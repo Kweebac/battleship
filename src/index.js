@@ -11,8 +11,8 @@ DOM.createBoard(computerBoard);
 
 DOM.eventListeners();
 
-const player = Player("Kweebac");
-player.board.place(3, [0, 0], false);
+const player = Player("Player");
+player.board.place(1, [0, 0], false);
 DOM.populateBoard(playerBoard, player);
 
 const computer = Player("Computer");
@@ -20,3 +20,6 @@ computer.board.place(1, [5, 8], true);
 DOM.populateBoard(computerBoard, computer);
 
 export { player, computer };
+
+// get rid of playerTurn system
+// create drag and drop
