@@ -85,3 +85,9 @@ it("Random number isn't true or false", () => {
   player1.receiveAttack([1, 1]);
   expect([true, false]).not.toContain(player1.randomSquare());
 });
+
+// describe("convertCords() works correctly", () => {
+//   it("a 2 TRUE", () => {
+
+//   })
+// })

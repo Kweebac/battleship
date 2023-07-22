@@ -1,4 +1,4 @@
-import { computer } from "..";
+import { computer, player } from "..";
 import { Ship } from "./ship";
 
 function Gameboard() {
@@ -71,6 +71,58 @@ function Gameboard() {
     }
   }
 
+  function _convertCoords(ship) {
+    ship = ship.replace(/\s/g, "").toLowerCase().split(",");
+    ship[1] = +ship[1];
+    if (ship[2] === "true") ship[2] = true;
+    else if (ship[2] === "false") ship[2] = false;
+
+    if (
+      ship.length > 3 ||
+      typeof ship[0] !== "string" ||
+      typeof ship[1] !== "number" ||
+      isNaN(ship[1]) ||
+      (ship[2] !== true && ship[2] !== false)
+    )
+      throw new Error("Invalid coordinates");
+
+    if (ship[0] === "a") ship[0] = 0;
+    else if (ship[0] === "b") ship[0] = 1;
+    else if (ship[0] === "c") ship[0] = 2;
+    else if (ship[0] === "d") ship[0] = 3;
+    else if (ship[0] === "e") ship[0] = 4;
+    else if (ship[0] === "f") ship[0] = 5;
+    else if (ship[0] === "g") ship[0] = 6;
+    else if (ship[0] === "h") ship[0] = 7;
+    else if (ship[0] === "i") ship[0] = 8;
+    else if (ship[0] === "j") ship[0] = 9;
+
+    if (ship[0] < 0 || ship[0] > 9 || ship[1] < 0 || ship[1] > 9)
+      throw new Error("Invalid coordinates");
+    else return [[ship[0], ship[1]], ship[2]];
+  }
+
+  function playerPlace(length) {
+    let ship = undefined;
+    while (true) {
+      try {
+        ship = _convertCoords(
+          prompt(
+            `Input coords & vertical rotation for ${length} length ship (letter, number, true/false)`
+          )
+        );
+      } catch (error) {
+        continue;
+      }
+      try {
+        player.board.place(length, ship[0], ship[1]);
+        break;
+      } catch (error) {
+        continue;
+      }
+    }
+  }
+
   function receiveAttack(coords) {
     if (gameboard[coords[0]][coords[1]] === true || gameboard[coords[0]][coords[1]] === false)
       throw new Error("Can't hit the same square twice");
@@ -99,7 +151,15 @@ function Gameboard() {
     return [randNum1, randNum2];
   }
 
-  return { getGameboard, place, computerPlace, receiveAttack, hasAllSunk, randomSquare };
+  return {
+    getGameboard,
+    place,
+    computerPlace,
+    playerPlace,
+    receiveAttack,
+    hasAllSunk,
+    randomSquare,
+  };
 }
 
 export { Gameboard };

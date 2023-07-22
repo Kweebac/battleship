@@ -1,5 +1,6 @@
 import "./normalize.css";
 import "./style.css";
+
 import { Player } from "./modules/player";
 import { DOM } from "./modules/DOM";
 
@@ -11,10 +12,6 @@ DOM.createBoard(computerBoard);
 
 DOM.eventListeners();
 
-const player = Player("Player");
-player.board.place(1, [0, 0], false);
-DOM.populateBoard(playerBoard, player);
-
 const computer = Player("Computer");
 computer.board.computerPlace(5);
 computer.board.computerPlace(4);
@@ -23,4 +20,29 @@ computer.board.computerPlace(3);
 computer.board.computerPlace(2);
 DOM.populateBoard(computerBoard, computer);
 
+const player = Player("Player");
+setTimeout(() => {
+  player.board.playerPlace(5);
+  DOM.populateBoard(playerBoard, player);
+  setTimeout(() => {
+    player.board.playerPlace(4);
+    DOM.populateBoard(playerBoard, player);
+    setTimeout(() => {
+      player.board.playerPlace(3);
+      DOM.populateBoard(playerBoard, player);
+      setTimeout(() => {
+        player.board.playerPlace(3);
+        DOM.populateBoard(playerBoard, player);
+        setTimeout(() => {
+          player.board.playerPlace(2);
+          DOM.populateBoard(playerBoard, player);
+        }, 500);
+      }, 500);
+    }, 500);
+  }, 500);
+}, 500);
+
 export { player, computer };
+
+// seperate win conditions into function
+// make computer smarter
