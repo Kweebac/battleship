@@ -1,5 +1,8 @@
 import { computer, player } from "..";
 
+let queue = [];
+let first = false;
+
 const DOM = {
   createBoard: (board) => {
     for (let i = 1; i < 11; i++) {
@@ -53,10 +56,79 @@ const DOM = {
     return squareCoords;
   },
 
-  attack: (squareCoords, user) => {
-    const winnerContainer = document.querySelector(".winner-container");
+  isAttackable: (squareCoords) => {
+    if (
+      squareCoords[0] >= 0 &&
+      squareCoords[0] < 10 &&
+      squareCoords[1] >= 0 &&
+      squareCoords[1] < 10 &&
+      player.board.getGameboard()[squareCoords[0]][squareCoords[1]] !== true &&
+      player.board.getGameboard()[squareCoords[0]][squareCoords[1]] !== false
+    )
+      return true;
+    else return false;
+  },
 
-    // if win
+  attack: (squareCoords, user) => {
+    if (user.name === "Player") {
+      if (queue.length) {
+        const shiftedItem = queue.shift();
+        squareCoords = shiftedItem.coords;
+
+        if (
+          typeof player.board.getGameboard()[squareCoords[0]][squareCoords[1]] === "object"
+        ) {
+          if (shiftedItem.vertical) {
+            if (first) {
+              for (let i = 0; i < queue.length; i++) {
+                if (!queue[i].vertical) queue.splice(i, 1);
+              }
+            }
+
+            if (DOM.isAttackable([squareCoords[0], squareCoords[1] - 1]))
+              queue.push({ coords: [squareCoords[0], squareCoords[1] - 1], vertical: true });
+            if (DOM.isAttackable([squareCoords[0], squareCoords[1] + 1]))
+              queue.push({ coords: [squareCoords[0], squareCoords[1] + 1], vertical: true });
+
+            first = false;
+          } else if (!shiftedItem.vertical) {
+            if (first) {
+              for (let i = 0; i < queue.length; i++) {
+                if (queue[i].vertical) queue.splice(i, 1);
+              }
+            }
+
+            if (DOM.isAttackable([squareCoords[0] + 1, squareCoords[1]]))
+              queue.push({
+                coords: [squareCoords[0] + 1, squareCoords[1]],
+                vertical: false,
+              });
+            if (DOM.isAttackable([squareCoords[0] - 1, squareCoords[1]]))
+              queue.push({
+                coords: [squareCoords[0] - 1, squareCoords[1]],
+                vertical: false,
+              });
+
+            first = false;
+          }
+        }
+      } else if (
+        !queue.length &&
+        typeof player.board.getGameboard()[squareCoords[0]][squareCoords[1]] === "object"
+      ) {
+        if (DOM.isAttackable([squareCoords[0], squareCoords[1] - 1]))
+          queue.push({ coords: [squareCoords[0], squareCoords[1] - 1], vertical: true });
+        if (DOM.isAttackable([squareCoords[0] + 1, squareCoords[1]]))
+          queue.push({ coords: [squareCoords[0] + 1, squareCoords[1]], vertical: false });
+        if (DOM.isAttackable([squareCoords[0], squareCoords[1] + 1]))
+          queue.push({ coords: [squareCoords[0], squareCoords[1] + 1], vertical: true });
+        if (DOM.isAttackable([squareCoords[0] - 1, squareCoords[1]]))
+          queue.push({ coords: [squareCoords[0] - 1, squareCoords[1]], vertical: false });
+        first = true;
+      }
+    }
+
+    const winnerContainer = document.querySelector(".winner-container");
     if (user.board.receiveAttack(squareCoords) === "Win") {
       winnerContainer.children[0].textContent =
         user.name === "Player" ? "Computer wins!" : "Player wins!";

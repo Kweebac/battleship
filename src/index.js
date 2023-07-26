@@ -36,13 +36,10 @@ setTimeout(() => {
         setTimeout(() => {
           player.board.playerPlace(2);
           DOM.populateBoard(playerBoard, player);
-        }, 500);
-      }, 500);
-    }, 500);
-  }, 500);
-}, 500);
+        }, 250);
+      }, 250);
+    }, 250);
+  }, 250);
+}, 250);
 
 export { player, computer };
-
-// seperate win conditions into function
-// make computer smarter
