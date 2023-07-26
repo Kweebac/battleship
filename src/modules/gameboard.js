@@ -105,7 +105,6 @@ function Gameboard() {
   function playerPlace(length) {
     let ship = undefined;
 
-    // let i = 0; // remove
     while (true) {
       try {
         ship = _convertCoords(
@@ -113,7 +112,6 @@ function Gameboard() {
             `Input coords & vertical rotation for ${length} length ship (letter, number, true/false)`
           )
         );
-        // ship = _convertCoords(`A, ${i++}, false`); // remove
       } catch (error) {
         continue;
       }

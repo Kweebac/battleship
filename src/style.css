@@ -6,6 +6,21 @@ body {
   place-items: center;
 }
 
+.playerName,
+.computerName {
+  position: absolute;
+  font-size: 2rem;
+  font-weight: bold;
+}
+.playerName {
+  top: 10rem;
+  left: 27rem;
+}
+.computerName {
+  top: 10rem;
+  right: 23rem;
+}
+
 .board {
   width: max-content;
   height: calc(3rem * 11);
