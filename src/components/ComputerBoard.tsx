@@ -1,45 +1,16 @@
 import { useCallback } from "react";
 
 type ComputerBoardProps = {
-  player: string[][];
-  setPlayer: React.Dispatch<React.SetStateAction<string[][]>>;
   computer: string[][];
-  setComputer: React.Dispatch<React.SetStateAction<string[][]>>;
+  computerAttack: () => void;
+  playerAttack: (row: number, col: number, cell: string) => void;
 };
 
 export default function ComputerBoard({
-  player,
-  setPlayer,
   computer,
-  setComputer,
+  computerAttack,
+  playerAttack,
 }: ComputerBoardProps) {
-  const computerAttack = useCallback(() => {
-    const playerCopy = JSON.parse(JSON.stringify(player));
-    while (true) {
-      const row = Math.floor(Math.random() * 10);
-      const col = Math.floor(Math.random() * 10);
-      if (playerCopy[row][col] === "ship") {
-        playerCopy[row][col] = "hit";
-        break;
-      } else if (playerCopy[row][col] === "") {
-        playerCopy[row][col] = "miss";
-        break;
-      }
-    }
-
-    setPlayer?.(playerCopy);
-  }, [player, setPlayer]);
-
-  const playerAttack = useCallback(
-    (row: number, col: number, cell: string) => {
-      const computerCopy = JSON.parse(JSON.stringify(computer));
-      computerCopy[row][col] = cell === "ship" ? "hit" : "miss";
-
-      setComputer?.(computerCopy);
-    },
-    [computer, setComputer],
-  );
-
   const populateRow = useCallback(
     (row: number) => {
       return computer[row].map((cell, col) => {
