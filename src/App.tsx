@@ -32,6 +32,7 @@ export default function App() {
     <main className="grid h-screen place-content-center gap-8 md:grid-flow-col md:gap-[5rem] lg:gap-[7.5rem] xl:gap-[10rem] 2xl:gap-[12.5rem]">
       <PlayerBoard player={player} />
       <ComputerBoard
+        player={player}
         setPlayer={setPlayer}
         computer={computer}
         setComputer={setComputer}

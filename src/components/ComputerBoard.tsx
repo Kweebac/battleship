@@ -1,26 +1,41 @@
 import { useCallback } from "react";
 
 type ComputerBoardProps = {
+  player: string[][];
   setPlayer: React.Dispatch<React.SetStateAction<string[][]>>;
   computer: string[][];
   setComputer: React.Dispatch<React.SetStateAction<string[][]>>;
 };
 
 export default function ComputerBoard({
+  player,
   setPlayer,
   computer,
   setComputer,
 }: ComputerBoardProps) {
-  const attack = useCallback(
-    (row: number, col: number, cell: string) => {
-      if (cell === "hit" || cell === "miss") return;
+  const computerAttack = useCallback(() => {
+    const playerCopy = JSON.parse(JSON.stringify(player));
+    while (true) {
+      const row = Math.floor(Math.random() * 10);
+      const col = Math.floor(Math.random() * 10);
+      if (playerCopy[row][col] === "ship") {
+        playerCopy[row][col] = "hit";
+        break;
+      } else if (playerCopy[row][col] === "") {
+        playerCopy[row][col] = "miss";
+        break;
+      }
+    }
 
+    setPlayer?.(playerCopy);
+  }, [player, setPlayer]);
+
+  const playerAttack = useCallback(
+    (row: number, col: number, cell: string) => {
       const computerCopy = JSON.parse(JSON.stringify(computer));
       computerCopy[row][col] = cell === "ship" ? "hit" : "miss";
 
       setComputer?.(computerCopy);
-
-      console.log("computers turn");
     },
     [computer, setComputer],
   );
@@ -28,9 +43,16 @@ export default function ComputerBoard({
   const populateRow = useCallback(
     (row: number) => {
       return computer[row].map((cell, col) => {
+        const handleClick = () => {
+          if (cell === "hit" || cell === "miss") return;
+
+          playerAttack(row, col, cell);
+          computerAttack();
+        };
+
         if (cell === "hit")
           return (
-            <td onClick={() => attack(row, col, cell)} key={col}>
+            <td onClick={handleClick} key={col}>
               <svg
                 fill="red"
                 xmlns="http://www.w3.org/2000/svg"
@@ -42,16 +64,16 @@ export default function ComputerBoard({
           );
         else if (cell === "miss")
           return (
-            <td onClick={() => attack(row, col, cell)} key={col}>
+            <td onClick={handleClick} key={col}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path d="M12,10A2,2 0 0,0 10,12C10,13.11 10.9,14 12,14C13.11,14 14,13.11 14,12A2,2 0 0,0 12,10Z" />
               </svg>
             </td>
           );
-        else return <td onClick={() => attack(row, col, cell)} key={col}></td>;
+        else return <td onClick={handleClick} key={col}></td>;
       });
     },
-    [computer, attack],
+    [computer, playerAttack, computerAttack],
   );
 
   return (
@@ -60,7 +82,7 @@ export default function ComputerBoard({
       <table className={"computer"}>
         <tbody>
           <tr>
-            <th></th>
+            <td></td>
             <th>1</th>
             <th>2</th>
             <th>3</th>
