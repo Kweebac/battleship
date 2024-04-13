@@ -21,8 +21,9 @@ function useAttack({
       axis: "y" | "x";
     }[]
   >([]);
-  const unsunkShipsLength = [5, 4, 3, 3, 2];
+  const unsunkShipsLength = useRef([5, 4, 3, 3, 2]);
   const maxShipsInARow = useRef(5);
+  const shipsHitInARow = useRef(0);
 
   const computerAttack = useCallback(() => {
     const playerCopy = JSON.parse(JSON.stringify(player));
@@ -35,6 +36,7 @@ function useAttack({
 
         if (playerCopy[row][col] === "ship") {
           playerCopy[row][col] = "hit";
+          shipsHitInARow.current++;
 
           if (axis === "y") {
             // delete all x axis in queue
@@ -68,12 +70,25 @@ function useAttack({
             });
           }
 
+          if (shipsHitInARow.current === maxShipsInARow.current) {
+            computerAttackQueue.current = [];
+          }
+
           break;
         } else if (playerCopy[row][col] === "") {
           playerCopy[row][col] = "miss";
           break;
         }
       } else {
+        if (shipsHitInARow.current > 0) {
+          const index = unsunkShipsLength.current.indexOf(
+            shipsHitInARow.current,
+          );
+          unsunkShipsLength.current.splice(index, 1);
+          maxShipsInARow.current = unsunkShipsLength.current[0];
+          shipsHitInARow.current = 0;
+        }
+
         const row = Math.floor(Math.random() * 10);
         const col = Math.floor(Math.random() * 10);
 
@@ -91,6 +106,7 @@ function useAttack({
           };
 
           playerCopy[row][col] = "hit";
+          shipsHitInARow.current++;
 
           computerAddAttackToQueue(row + 1, col, "y");
           computerAddAttackToQueue(row - 1, col, "y");
@@ -132,7 +148,7 @@ export default function App() {
     ["", "ship", "", "", "", "ship", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", ""],
-    ["", "ship", "ship", "", "", "", "", "", "", ""],
+    ["", "ship", "ship", "ship", "", "", "", "", "", ""],
     ["", "", "", "", "ship", "ship", "ship", "ship", "", ""],
   ]);
   const [computer, setComputer] = useState([
@@ -144,7 +160,7 @@ export default function App() {
     ["", "ship", "", "", "", "ship", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", ""],
-    ["", "ship", "ship", "", "", "", "", "", "", ""],
+    ["", "ship", "ship", "ship", "", "", "", "", "", ""],
     ["", "", "", "", "ship", "ship", "ship", "ship", "", ""],
   ]);
 
