@@ -3,16 +3,9 @@
 @tailwind utilities;
 
 @layer components {
-  table {
-    @apply border-l-2 border-t-2 border-white;
-  }
-  table th {
-    @apply h-[1.85rem] w-[1.85rem] border border-black font-semibold lg:h-[2.2rem] lg:w-[2.2rem] xl:h-[2.5rem] xl:w-[2.5rem] xl:text-lg 2xl:h-[2.8rem] 2xl:w-[2.8rem];
-  }
   table td {
-    @apply h-[1.85rem] w-[1.85rem] border border-black;
+    @apply h-[2rem] w-[2rem] border border-black lg:h-[2.5rem] lg:w-[2.5rem] xl:h-[3rem] xl:w-[3rem];
   }
-
   table.computer td {
     @apply cursor-pointer;
   }
