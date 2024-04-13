@@ -4,16 +4,16 @@ import ComputerBoard from "./components/ComputerBoard";
 
 export default function App() {
   const [player, setPlayer] = useState([
-    ["", "miss", "", "", "miss", "ship", "ship", "miss", "", ""],
+    ["", "", "", "", "", "ship", "ship", "", "", ""],
     ["", "ship", "", "", "", "", "", "", "", ""],
-    ["", "ship", "", "", "", "miss", "", "", "", ""],
+    ["", "ship", "", "", "", "", "", "", "", ""],
     ["", "ship", "", "", "", "ship", "", "", "", ""],
     ["", "ship", "", "", "", "ship", "", "", "", ""],
     ["", "ship", "", "", "", "ship", "", "", "", ""],
-    ["", "miss", "", "", "", "miss", "", "", "", ""],
     ["", "", "", "", "", "", "", "", "", ""],
-    ["miss", "ship", "ship", "miss", "", "", "", "", "", ""],
-    ["", "", "", "miss", "ship", "ship", "ship", "ship", "miss", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "ship", "ship", "", "", "", "", "", "", ""],
+    ["", "", "", "", "ship", "ship", "ship", "ship", "", ""],
   ]);
   const [computer, setComputer] = useState([
     ["", "", "", "", "", "ship", "ship", "", "", ""],
@@ -37,10 +37,10 @@ export default function App() {
   const computerAttack = useCallback(() => {
     const playerCopy = JSON.parse(JSON.stringify(player));
 
-    if (computerAttackQueue.current.length > 0) {
-      while (true) {
-        const latestQueueItem = computerAttackQueue.current.pop();
-        const [row, col] = latestQueueItem?.coords;
+    while (true) {
+      const latestQueueItem = computerAttackQueue.current.pop();
+      if (latestQueueItem !== undefined) {
+        const [row, col] = latestQueueItem.coords;
         const axis = latestQueueItem?.axis;
 
         if (playerCopy[row][col] === "ship") {
@@ -83,9 +83,7 @@ export default function App() {
           playerCopy[row][col] = "miss";
           break;
         }
-      }
-    } else {
-      while (true) {
+      } else {
         const row = Math.floor(Math.random() * 10);
         const col = Math.floor(Math.random() * 10);
 
