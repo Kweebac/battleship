@@ -9,4 +9,10 @@
   table.computer td {
     @apply cursor-pointer;
   }
+
+  .absolute-center {
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+  }
 }

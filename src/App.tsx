@@ -1,20 +1,39 @@
 import { useCallback, useRef, useState } from "react";
 import PlayerBoard from "./components/PlayerBoard";
 import ComputerBoard from "./components/ComputerBoard";
+import Win from "./components/Win";
 
-type useAttackProps = {
-  player: string[][];
-  setPlayer?: React.Dispatch<React.SetStateAction<string[][]>>;
-  computer: string[][];
-  setComputer?: React.Dispatch<React.SetStateAction<string[][]>>;
-};
+function useGameLogic() {
+  const [player, setPlayer] = useState([
+    ["", "", "", "", "", "ship", "ship", "", "", ""],
+    ["", "ship", "", "", "", "", "", "", "", ""],
+    ["", "ship", "", "", "", "", "", "", "", ""],
+    ["", "ship", "", "", "", "ship", "", "", "", ""],
+    ["", "ship", "", "", "", "ship", "", "", "", ""],
+    ["", "ship", "", "", "", "ship", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "ship", "ship", "ship", "", "", "", "", "", ""],
+    ["", "", "", "", "ship", "ship", "ship", "ship", "", ""],
+  ]);
+  const [computer, setComputer] = useState([
+    ["", "", "", "", "", "ship", "ship", "", "", ""],
+    ["", "ship", "", "", "", "", "", "", "", ""],
+    ["", "ship", "", "", "", "", "", "", "", ""],
+    ["", "ship", "", "", "", "ship", "", "", "", ""],
+    ["", "ship", "", "", "", "ship", "", "", "", ""],
+    ["", "ship", "", "", "", "ship", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "ship", "ship", "ship", "", "", "", "", "", ""],
+    ["", "", "", "", "ship", "ship", "ship", "ship", "", ""],
+  ]);
 
-function useAttack({
-  player,
-  setPlayer,
-  computer,
-  setComputer,
-}: useAttackProps) {
+  const [playerShips, setPlayerShips] = useState(17);
+  const [computerShips, setComputerShips] = useState(17);
+  const winner =
+    playerShips === 0 ? "Computer" : computerShips === 0 ? "Player" : "";
+
   const computerAttackQueue = useRef<
     {
       coords: [number, number];
@@ -36,6 +55,7 @@ function useAttack({
 
         if (playerCopy[row][col] === "ship") {
           playerCopy[row][col] = "hit";
+          setPlayerShips((prev) => prev - 1);
           shipsHitInARow.current++;
 
           if (axis === "y") {
@@ -70,9 +90,8 @@ function useAttack({
             });
           }
 
-          if (shipsHitInARow.current === maxShipsInARow.current) {
+          if (shipsHitInARow.current === maxShipsInARow.current)
             computerAttackQueue.current = [];
-          }
 
           break;
         } else if (playerCopy[row][col] === "") {
@@ -106,6 +125,8 @@ function useAttack({
           };
 
           playerCopy[row][col] = "hit";
+          setPlayerShips((prev) => prev - 1);
+
           shipsHitInARow.current++;
 
           computerAddAttackToQueue(row + 1, col, "y");
@@ -128,48 +149,28 @@ function useAttack({
   const playerAttack = useCallback(
     (row: number, col: number, cell: string) => {
       const computerCopy = JSON.parse(JSON.stringify(computer));
-      computerCopy[row][col] = cell === "ship" ? "hit" : "miss";
+      if (cell === "ship") {
+        computerCopy[row][col] = "hit";
+        setComputerShips((prev) => prev - 1);
+      } else if (cell === "") computerCopy[row][col] = "miss";
 
       setComputer?.(computerCopy);
     },
     [computer, setComputer],
   );
 
-  return { computerAttack, playerAttack };
+  const reset = useCallback(() => {
+    console.log("Implement reset");
+  }, []);
+
+  return { player, computer, computerAttack, playerAttack, winner, reset };
 }
 
 export default function App() {
-  const [player, setPlayer] = useState([
-    ["", "", "", "", "", "ship", "ship", "", "", ""],
-    ["", "ship", "", "", "", "", "", "", "", ""],
-    ["", "ship", "", "", "", "", "", "", "", ""],
-    ["", "ship", "", "", "", "ship", "", "", "", ""],
-    ["", "ship", "", "", "", "ship", "", "", "", ""],
-    ["", "ship", "", "", "", "ship", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "ship", "ship", "ship", "", "", "", "", "", ""],
-    ["", "", "", "", "ship", "ship", "ship", "ship", "", ""],
-  ]);
-  const [computer, setComputer] = useState([
-    ["", "", "", "", "", "ship", "ship", "", "", ""],
-    ["", "ship", "", "", "", "", "", "", "", ""],
-    ["", "ship", "", "", "", "", "", "", "", ""],
-    ["", "ship", "", "", "", "ship", "", "", "", ""],
-    ["", "ship", "", "", "", "ship", "", "", "", ""],
-    ["", "ship", "", "", "", "ship", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "ship", "ship", "ship", "", "", "", "", "", ""],
-    ["", "", "", "", "ship", "ship", "ship", "ship", "", ""],
-  ]);
+  const { player, computer, computerAttack, playerAttack, winner, reset } =
+    useGameLogic();
 
-  const { computerAttack, playerAttack } = useAttack({
-    player,
-    setPlayer,
-    computer,
-    setComputer,
-  });
+  if (winner) console.log(winner);
 
   return (
     <main className="grid h-screen place-content-center gap-8 md:grid-flow-col md:gap-[5rem] lg:gap-[7.5rem] xl:gap-[10rem]">
@@ -179,6 +180,7 @@ export default function App() {
         computerAttack={computerAttack}
         playerAttack={playerAttack}
       />
+      {winner && <Win winner={winner} reset={reset} />}
     </main>
   );
 }
