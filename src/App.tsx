@@ -2,37 +2,27 @@ import { useCallback, useRef, useState } from "react";
 import PlayerBoard from "./components/PlayerBoard";
 import ComputerBoard from "./components/ComputerBoard";
 
-export default function App() {
-  const [player, setPlayer] = useState([
-    ["", "", "", "", "", "ship", "ship", "", "", ""],
-    ["", "ship", "", "", "", "", "", "", "", ""],
-    ["", "ship", "", "", "", "", "", "", "", ""],
-    ["", "ship", "", "", "", "ship", "", "", "", ""],
-    ["", "ship", "", "", "", "ship", "", "", "", ""],
-    ["", "ship", "", "", "", "ship", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "ship", "ship", "", "", "", "", "", "", ""],
-    ["", "", "", "", "ship", "ship", "ship", "ship", "", ""],
-  ]);
-  const [computer, setComputer] = useState([
-    ["", "", "", "", "", "ship", "ship", "", "", ""],
-    ["", "ship", "", "", "", "", "", "", "", ""],
-    ["", "ship", "", "", "", "", "", "", "", ""],
-    ["", "ship", "", "", "", "ship", "", "", "", ""],
-    ["", "ship", "", "", "", "ship", "", "", "", ""],
-    ["", "ship", "", "", "", "ship", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "ship", "ship", "", "", "", "", "", "", ""],
-    ["", "", "", "", "ship", "ship", "ship", "ship", "", ""],
-  ]);
+type useAttackProps = {
+  player: string[][];
+  setPlayer?: React.Dispatch<React.SetStateAction<string[][]>>;
+  computer: string[][];
+  setComputer?: React.Dispatch<React.SetStateAction<string[][]>>;
+};
+
+function useAttack({
+  player,
+  setPlayer,
+  computer,
+  setComputer,
+}: useAttackProps) {
   const computerAttackQueue = useRef<
     {
       coords: [number, number];
       axis: "y" | "x";
     }[]
   >([]);
+  const unsunkShipsLength = [5, 4, 3, 3, 2];
+  const maxShipsInARow = useRef(5);
 
   const computerAttack = useCallback(() => {
     const playerCopy = JSON.parse(JSON.stringify(player));
@@ -128,6 +118,42 @@ export default function App() {
     },
     [computer, setComputer],
   );
+
+  return { computerAttack, playerAttack };
+}
+
+export default function App() {
+  const [player, setPlayer] = useState([
+    ["", "", "", "", "", "ship", "ship", "", "", ""],
+    ["", "ship", "", "", "", "", "", "", "", ""],
+    ["", "ship", "", "", "", "", "", "", "", ""],
+    ["", "ship", "", "", "", "ship", "", "", "", ""],
+    ["", "ship", "", "", "", "ship", "", "", "", ""],
+    ["", "ship", "", "", "", "ship", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "ship", "ship", "", "", "", "", "", "", ""],
+    ["", "", "", "", "ship", "ship", "ship", "ship", "", ""],
+  ]);
+  const [computer, setComputer] = useState([
+    ["", "", "", "", "", "ship", "ship", "", "", ""],
+    ["", "ship", "", "", "", "", "", "", "", ""],
+    ["", "ship", "", "", "", "", "", "", "", ""],
+    ["", "ship", "", "", "", "ship", "", "", "", ""],
+    ["", "ship", "", "", "", "ship", "", "", "", ""],
+    ["", "ship", "", "", "", "ship", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", ""],
+    ["", "ship", "ship", "", "", "", "", "", "", ""],
+    ["", "", "", "", "ship", "ship", "ship", "ship", "", ""],
+  ]);
+
+  const { computerAttack, playerAttack } = useAttack({
+    player,
+    setPlayer,
+    computer,
+    setComputer,
+  });
 
   return (
     <main className="grid h-screen place-content-center gap-8 md:grid-flow-col md:gap-[5rem] lg:gap-[7.5rem] xl:gap-[10rem]">
