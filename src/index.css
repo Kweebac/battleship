@@ -6,7 +6,7 @@
   table td {
     @apply h-[2rem] w-[2rem] border border-black lg:h-[2.5rem] lg:w-[2.5rem] xl:h-[3rem] xl:w-[3rem];
   }
-  table.computer td {
+  table.clickable td {
     @apply cursor-pointer;
   }
 

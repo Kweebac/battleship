@@ -12,7 +12,7 @@ export default function ComputerBoard({
   return (
     <section className="grid w-max justify-items-center gap-4">
       <h1 className="text-3xl font-semibold">Computer</h1>
-      <table className="computer">
+      <table className="clickable">
         <tbody>
           {computer.map((row, rowNumber) => (
             <tr key={rowNumber}>
