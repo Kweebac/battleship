@@ -58,22 +58,22 @@ export default function PlaceShips({
     setComputer(computerCopy);
   }, [computer, setComputer]);
 
+  const rotate = (e: KeyboardEvent | React.MouseEvent<HTMLButtonElement>) => {
+    if (e.type === "click" || (e instanceof KeyboardEvent && e.key === "r")) {
+      setDisplayShip((prev) => {
+        const direction = prev.direction;
+        return {
+          ...prev,
+          direction: direction === "x" ? "y" : "x",
+        };
+      });
+    }
+  };
+
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "r") {
-        setDisplayShip((prev) => {
-          const direction = prev.direction;
-          return {
-            ...prev,
-            direction: direction === "x" ? "y" : "x",
-          };
-        });
-      }
-    };
+    addEventListener("keydown", rotate);
 
-    addEventListener("keydown", handleKeyDown);
-
-    return () => removeEventListener("keydown", handleKeyDown);
+    return () => removeEventListener("keydown", rotate);
   }, []);
 
   useEffect(() => {
@@ -146,12 +146,15 @@ export default function PlaceShips({
 
   return (
     <main className="grid h-screen place-content-center justify-items-center gap-4">
-      <h1 className="flex place-items-center gap-2 text-3xl">
+      <button
+        onClick={(e) => rotate(e)}
+        className="flex place-items-center gap-2 text-3xl"
+      >
         Rotate
         <span className="rounded-lg bg-blue-500 px-2 text-2xl text-white">
           R
         </span>
-      </h1>
+      </button>
       <table className="clickable">
         <tbody>
           {player.map((row, rowNumber) => (
