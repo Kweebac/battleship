@@ -19,6 +19,7 @@ export default function PlaceShips({
   const [displayShip, setDisplayShip] = useState({
     coords: [] as number[][],
     direction: "x" as "x" | "y",
+    valid: true,
   });
   const [coords, setCoords] = useState<[number, number]>();
 
@@ -68,7 +69,7 @@ export default function PlaceShips({
         setDisplayShip((prev) => {
           const direction = prev.direction;
           return {
-            coords: prev.coords,
+            ...prev,
             direction: direction === "x" ? "y" : "x",
           };
         });
@@ -88,21 +89,24 @@ export default function PlaceShips({
 
     if (coords) {
       const direction = displayShip.direction;
-      const array = [];
+      const array: number[][] = [];
+      let valid = true;
       for (let i = 0; i < shipsToPlace[0]; i++) {
         if (direction === "x") {
-          if (coords[1] + i >= 10) return;
-          if (player[coords[0]][coords[1] + i] === "ship") return;
+          if (coords[1] + i >= 10) valid = false;
+          else if (player[coords[0]][coords[1] + i] === "ship") valid = false;
 
           array.push([coords[0], coords[1] + i]);
         } else if (direction === "y") {
-          if (coords[0] + i >= 10) return;
-          if (player[coords[0] + i][coords[1]] === "ship") return;
+          if (coords[0] + i >= 10) valid = false;
+          else if (player[coords[0] + i][coords[1]] === "ship") valid = false;
 
           array.push([coords[0] + i, coords[1]]);
         }
       }
-      setDisplayShip({ coords: array, direction });
+      setDisplayShip((prev) => {
+        return { ...prev, coords: array, valid };
+      });
     }
   }, [
     displayShip.direction,
@@ -119,6 +123,8 @@ export default function PlaceShips({
   }, []);
 
   const handleClick = useCallback(() => {
+    if (displayShip.valid === false) return;
+
     let clickable = false;
     for (const coord of displayShip.coords) {
       if (JSON.stringify(coord) === JSON.stringify(coords)) clickable = true;
@@ -134,13 +140,20 @@ export default function PlaceShips({
       setPlayer?.(playerCopy);
       setShipsToPlace((prev) => prev.slice(1));
     }
-  }, [displayShip.coords, player, setPlayer, setShipsToPlace, coords]);
+  }, [
+    displayShip.coords,
+    displayShip.valid,
+    player,
+    setPlayer,
+    setShipsToPlace,
+    coords,
+  ]);
 
   return (
     <main className="grid h-screen place-content-center justify-items-center gap-4">
       <h1 className="flex place-items-center gap-2 text-3xl">
         Rotate
-        <span className="rounded-lg bg-green-600 px-2 text-2xl text-white">
+        <span className="rounded-lg bg-blue-500 px-2 text-2xl text-white">
           R
         </span>
       </h1>
@@ -149,9 +162,21 @@ export default function PlaceShips({
           {player.map((row, rowNumber) => (
             <tr key={rowNumber}>
               {row.map((cell, colNumber) => {
-                if (cell === "ship")
+                if (cell === "ship") {
+                  const color =
+                    displayShip.coords.some(
+                      (coord) =>
+                        coord[0] === rowNumber && coord[1] === colNumber,
+                    ) && !displayShip.valid
+                      ? "bg-gray-300"
+                      : undefined;
+
                   return (
-                    <td key={colNumber}>
+                    <td
+                      className={color}
+                      onMouseOver={() => handleHover(rowNumber, colNumber)}
+                      key={colNumber}
+                    >
                       <svg
                         fill="#5555FF"
                         xmlns="http://www.w3.org/2000/svg"
@@ -161,11 +186,13 @@ export default function PlaceShips({
                       </svg>
                     </td>
                   );
-                else {
+                } else {
                   const color = displayShip.coords.some(
                     (coord) => coord[0] === rowNumber && coord[1] === colNumber,
                   )
-                    ? "bg-green-600"
+                    ? displayShip.valid
+                      ? "bg-blue-400"
+                      : "bg-gray-300"
                     : undefined;
 
                   return (
