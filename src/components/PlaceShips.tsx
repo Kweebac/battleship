@@ -27,36 +27,31 @@ export default function PlaceShips({
     const shipsToPlace = [5, 4, 3, 3, 2];
     const computerCopy = JSON.parse(JSON.stringify(computer));
     for (const shipToPlace of shipsToPlace) {
-      const direction = Math.random() < 0.5 ? "x" : "y";
-      const row = Math.floor(Math.random() * 10);
-      const col = Math.floor(Math.random() * 10);
+      while (true) {
+        const direction = Math.random() < 0.5 ? "x" : "y";
+        const row = Math.floor(Math.random() * 10);
+        const col = Math.floor(Math.random() * 10);
 
-      let valid = true;
-      // for (let i = 0; i < shipToPlace; i++) {
-      //   if (direction === "x") {
-      //     if (col + i >= 10) {
-      //       valid = false;
-      //     }
-      //     if (computerCopy[row][col + i] === "ship") {
-      //       valid = false;
-      //     }
-      //   } else if (direction === "y") {
-      //     if (row + i >= 10) {
-      //       valid = false;
-      //     }
-      //     if (computerCopy[row + i][col] === "ship") {
-      //       valid = false;
-      //     }
-      //   }
-      // }
-
-      if (valid) {
+        let valid = true;
         for (let i = 0; i < shipToPlace; i++) {
           if (direction === "x") {
-            computerCopy[row][col + i] = "ship";
+            if (col + i >= 10) valid = false;
+            else if (computerCopy[row][col + i] === "ship") valid = false;
           } else if (direction === "y") {
-            computerCopy[row + i][col] = "ship";
+            if (row + i >= 10) valid = false;
+            else if (computerCopy[row + i][col] === "ship") valid = false;
           }
+        }
+
+        if (valid) {
+          for (let i = 0; i < shipToPlace; i++) {
+            if (direction === "x") {
+              computerCopy[row][col + i] = "ship";
+            } else if (direction === "y") {
+              computerCopy[row + i][col] = "ship";
+            }
+          }
+          break;
         }
       }
     }
