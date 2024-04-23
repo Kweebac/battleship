@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import PlaceShipsBoardCell from "./PlaceShipsBoardCell";
 
 type PlaceShipsProps = {
   player: string[][];
@@ -58,23 +59,31 @@ export default function PlaceShips({
     setComputer(computerCopy);
   }, [computer, setComputer]);
 
-  const rotate = (e: KeyboardEvent | React.MouseEvent<HTMLButtonElement>) => {
-    if (e.type === "click" || (e instanceof KeyboardEvent && e.key === "r")) {
-      setDisplayShip((prev) => {
-        const direction = prev.direction;
-        return {
-          ...prev,
-          direction: direction === "x" ? "y" : "x",
-        };
-      });
-    }
-  };
-
-  useEffect(() => {
-    addEventListener("keydown", rotate);
-
-    return () => removeEventListener("keydown", rotate);
+  const rotate = useCallback(() => {
+    setDisplayShip((prev) => {
+      return {
+        ...prev,
+        direction: prev.direction === "x" ? "y" : "x",
+      };
+    });
   }, []);
+
+  const rotateOnR = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key !== "r") return;
+
+      rotate();
+    },
+    [rotate],
+  );
+
+  const handleRotateKey = useCallback(() => {
+    addEventListener("keydown", rotateOnR);
+
+    return () => removeEventListener("keydown", rotateOnR);
+  }, [rotateOnR]);
+
+  useEffect(handleRotateKey, [handleRotateKey]);
 
   useEffect(() => {
     if (shipsToPlace.length === 0) {
@@ -147,7 +156,7 @@ export default function PlaceShips({
   return (
     <main className="grid h-screen place-content-center justify-items-center gap-4">
       <button
-        onClick={(e) => rotate(e)}
+        onClick={rotate}
         className="flex place-items-center gap-2 text-3xl"
       >
         Rotate
@@ -159,50 +168,16 @@ export default function PlaceShips({
         <tbody>
           {player.map((row, rowNumber) => (
             <tr key={rowNumber}>
-              {row.map((cell, colNumber) => {
-                if (cell === "ship") {
-                  const color =
-                    displayShip.coords.some(
-                      (coord) =>
-                        coord[0] === rowNumber && coord[1] === colNumber,
-                    ) && !displayShip.valid
-                      ? "bg-gray-300"
-                      : undefined;
-
-                  return (
-                    <td
-                      className={color}
-                      onMouseOver={() => handleHover(rowNumber, colNumber)}
-                      key={colNumber}
-                    >
-                      <svg
-                        fill="#5555FF"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M3 13.5L11 2.03V13.5H3M12.5 13.5C13.85 9.75 13.67 4.71 12.5 1C17.26 2.54 20.9 8.4 20.96 13.5H12.5M21.1 17.08C20.69 17.72 20.21 18.27 19.65 18.74C19 18.45 18.42 18 17.96 17.5C16.47 19.43 13.46 19.43 11.97 17.5C10.5 19.43 7.47 19.43 6 17.5C5.5 18 4.95 18.45 4.3 18.74C3.16 17.8 2.3 16.46 2 15H21.94C21.78 15.75 21.5 16.44 21.1 17.08M20.96 23C19.9 23 18.9 22.75 17.96 22.25C16.12 23.25 13.81 23.25 11.97 22.25C10.13 23.25 7.82 23.25 6 22.25C4.77 22.94 3.36 23.05 2 23V21C3.41 21.05 4.77 20.9 6 20C7.74 21.25 10.21 21.25 11.97 20C13.74 21.25 16.2 21.25 17.96 20C19.17 20.9 20.54 21.05 21.94 21V23H20.96Z" />
-                      </svg>
-                    </td>
-                  );
-                } else {
-                  const color = displayShip.coords.some(
-                    (coord) => coord[0] === rowNumber && coord[1] === colNumber,
-                  )
-                    ? displayShip.valid
-                      ? "bg-blue-400"
-                      : "bg-gray-300"
-                    : undefined;
-
-                  return (
-                    <td
-                      className={color}
-                      onMouseOver={() => handleHover(rowNumber, colNumber)}
-                      onClick={() => handleClick()}
-                      key={colNumber}
-                    ></td>
-                  );
-                }
-              })}
+              {row.map((cell, colNumber) => (
+                <PlaceShipsBoardCell
+                  rowNumber={rowNumber}
+                  colNumber={colNumber}
+                  cell={cell}
+                  displayShip={displayShip}
+                  handleHover={handleHover}
+                  handleClick={handleClick}
+                />
+              ))}
             </tr>
           ))}
         </tbody>
