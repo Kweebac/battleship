@@ -29,13 +29,13 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <h3 align="center">project_title</h3>
+  <h3 align="center">Battleship</h3>
 
   <p align="center">
-    project_description
+    Play Battleship against a human-like AI
     <br />
     <br />
-    <a href="">View website</a>
+    <a href="https://kweebac-battleship.vercel.app/">View website</a>
     ·
     <a href="https://github.com/Kweebac/battleship/issues/new?assignees=&labels=bug&template=bug_report.md">Report bug</a>
     ·
@@ -60,7 +60,6 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -73,9 +72,9 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Website screenshot][product-screenshot]](https://kweebac-battleship.vercel.app/)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `battleship`, `project_title`, `project_description`
+Place your ships and play against a human-like AI which won't make any unnecessary moves, making it just as good or better than you!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -92,12 +91,7 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
 ### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
 
 - npm
   ```sh
@@ -117,24 +111,11 @@ This is an example of how to list things you need to use the software and how to
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- USAGE EXAMPLES -->
-
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- ROADMAP -->
 
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-  - [ ] Nested Feature
+- [ ] Prevent placing ships next to each other
 
 See the [open issues](https://github.com/Kweebac/battleship/issues) for a full list of proposed features (and known issues).
 
@@ -144,16 +125,15 @@ See the [open issues](https://github.com/Kweebac/battleship/issues) for a full l
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork the project
+2. Create your feature branch (`git switch -C feature/amazingFeature`)
+3. Commit your changes (`git commit -m 'Add some amazing Feature'`)
+4. Push to the branch (`git push origin feature/amazingFeature`)
+5. Open a pull request
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -199,7 +179,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 [license-url]: https://github.com/Kweebac/battleship/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/alfie-marshall-045bba268/
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: https://i.imgur.com/OEWZDPJ.png
 [React]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://react.dev/
 [TypeScript]: https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white
